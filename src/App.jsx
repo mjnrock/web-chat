@@ -5,7 +5,7 @@ import {
     Route
 } from "react-router-dom";
 
-import Menu from "./Menu";
+// import Menu from "./Menu";
 import Routes from "./routes/package";
 
 

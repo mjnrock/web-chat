@@ -1,11 +1,16 @@
 import React, { useState } from "react";
 import { Header, Container, Button, Icon, Segment, Progress } from "semantic-ui-react";
 
-function Settings() {
+function Settings(props) {
     const [ source, setSource ] = useState("user");
     const [ mute, setMute ] = useState([]);
-
+    const [ isRecording, setIsRecording ] = useState(false);
     const [ volume, setVolume ] = useState(50);
+
+    function handleRecording() {
+        setIsRecording(!isRecording);
+        props.onRecord(!isRecording);
+    }
 
     function adjustVolume(e) {
         if(e.buttons === 1) {
@@ -26,6 +31,22 @@ function Settings() {
 
     return (
         <Container text>
+            <Segment raised>
+                <Header size="tiny">Capture</Header>
+
+                <Button.Group fluid icon>
+                    <Button icon labelPosition="left" size="huge" color={ isRecording ? "red" : null } onClick={ handleRecording }>
+                        <Icon name="dot circle" />
+                        { isRecording ? "00:00" : "Record"  }
+                    </Button>
+
+                    <Button icon labelPosition="left" size="huge">
+                        <Icon name="camera retro" />
+                        Capture
+                    </Button>
+                </Button.Group>
+            </Segment>
+            
             <Segment raised>
                 <Header size="tiny">Source</Header>
 

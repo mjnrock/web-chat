@@ -37,7 +37,7 @@ const reducer = (state, action) => {
 };
 
 function App() {
-    const [ state, dispatch ] = React.useReducer(reducer, initialState);
+    let [ state, dispatch ] = React.useReducer(reducer, initialState);
 
     return (
         <AuthContext.Provider
@@ -46,7 +46,7 @@ function App() {
                 dispatch
             }}
         >
-            <Menu />
+            {/* <Menu /> */}
 
             <Router>
                 <Switch>

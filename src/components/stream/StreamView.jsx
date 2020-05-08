@@ -1,8 +1,13 @@
 import React, { useState } from "react";
-import { Rail, Button, Segment, Placeholder, Icon, Dimmer } from "semantic-ui-react";
+import { Rail, Button, Segment, Icon, Dimmer } from "semantic-ui-react";
 import Settings from "./Settings";
 
+import { getUserMedia } from "./../../lib/UserMedia";
+
 function StreamView() {
+    const userMediaRef = React.createRef();
+    const [ userMedia, setUserMedia ] = useState();
+
     const [ isRecording, setIsRecording ] = useState(false);
     const [ isSettingsVisible, setIsSettingsVisible ] = useState(false);
 
@@ -10,13 +15,26 @@ function StreamView() {
         setIsRecording(!isRecording);
     }
 
+    async function onGetUserMedia() {
+        const stream = await getUserMedia();
+        
+        userMediaRef.current.srcObject = stream;
+        setUserMedia(stream);
+    }
+
     return (
         // <Dimmer.Dimmable as={ Segment } dimmed={ isSettingsVisible } onMouseEnter={ e => setIsSettingsVisible(true) } onMouseLeave={ e => setIsSettingsVisible(false) }>
         <Dimmer.Dimmable as={ Segment } dimmed={ isSettingsVisible }>
-            <Placeholder fluid>
-                <Placeholder.Image rectangular />
-            </Placeholder>
+            <Button icon onClick={ onGetUserMedia }>
+                <Icon name="video camera" />
+            </Button>
+            <video ref={ userMediaRef } autoPlay={ true } />
             
+            {/* <Menu inverted secondary text>
+                <Menu.Item>asdf</Menu.Item>
+                <Menu.Item>asdf</Menu.Item>
+                <Menu.Item>asdf</Menu.Item>
+            </Menu> */}
             <Rail attached internal position="right">
                 <Button.Group icon floated="right">
                     {

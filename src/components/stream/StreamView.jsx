@@ -15,20 +15,20 @@ function StreamView() {
     const [ isSettingsVisible, setIsSettingsVisible ] = useState(false);
 
     useEffect(() => {
-        if(!videoRef.current.srcObject) {
-            let stream;
-            if(userMedia && userMedia.active) {
-                stream = userMedia;
-            }
-            if(displayMedia && displayMedia.active) {
-                stream = displayMedia;
-            }
+        let stream;
+        if(userMedia && userMedia.active) {
+            stream = userMedia;
+        }
+        if(displayMedia && displayMedia.active) {
+            stream = displayMedia;
+        }
 
+        if(videoRef.current.srcObject !== stream) {
             videoRef.current.srcObject = stream;
         }
         videoRef.current.volume = volume / 100;
 
-    }, [ userMedia, displayMedia, volume ]);
+    }, [ userMedia, displayMedia, volume, videoRef ]);
 
     function handleRecording() {
         setIsRecording(!isRecording);

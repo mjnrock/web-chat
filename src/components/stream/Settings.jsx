@@ -135,10 +135,10 @@ function Settings(props) {
                 <Header size="tiny">Source</Header>
 
                 <Button.Group fluid icon>
-                    <Button color={ source === "user" ? "green" : null } size="huge" onClick={ e => setSource("user") }>
+                    <Button color={ source === "user" ? "blue" : null } size="huge" onClick={ e => setSource("user") }>
                         <Icon name="user circle outline" />
                     </Button>
-                    <Button color={ source === "display" ? "green" : null } size="huge" onClick={ e => setSource("display") }>
+                    <Button color={ source === "display" ? "blue" : null } size="huge" onClick={ e => setSource("display") }>
                         <Icon name="tv" />
                     </Button>
                     {/* <Button color={ source === "canvas" ? "green" : null } size="huge" onClick={ e => setSource("canvas") }>
@@ -183,7 +183,7 @@ function Settings(props) {
                             </Button>
                         </Grid.Column>
                         <Grid.Column width={ 12 }>
-                            <Progress percent={ volume } size="medium" color="green" onMouseMove={ adjustVolume } onMouseDown={ adjustVolume } />
+                            <Progress percent={ volume } size="medium" color="blue" onMouseMove={ adjustVolume } onMouseDown={ adjustVolume } />
                         </Grid.Column>
                         <Grid.Column width={ 2 }>
                             <Button icon inverted color="grey" onClick={ e => {

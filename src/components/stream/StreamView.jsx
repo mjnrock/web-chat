@@ -1,60 +1,138 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Rail, Button, Segment, Icon, Dimmer } from "semantic-ui-react";
 import Settings from "./Settings";
 
 import { getUserMedia } from "./../../lib/UserMedia";
+import { getDisplayMedia } from "./../../lib/DisplayMedia";
 
 function StreamView() {
-    const userMediaRef = React.createRef();
+    const videoRef = React.createRef();
     const [ userMedia, setUserMedia ] = useState();
+    const [ displayMedia, setDisplayMedia ] = useState();
+    const [ volume, setVolume ] = useState(50);
 
     const [ isRecording, setIsRecording ] = useState(false);
     const [ isSettingsVisible, setIsSettingsVisible ] = useState(false);
+
+    useEffect(() => {
+        if(!videoRef.current.srcObject) {
+            let stream;
+            if(userMedia && userMedia.active) {
+                stream = userMedia;
+            }
+            if(displayMedia && displayMedia.active) {
+                stream = displayMedia;
+            }
+
+            videoRef.current.srcObject = stream;
+        }
+        videoRef.current.volume = volume / 100;
+
+    }, [ userMedia, displayMedia, volume ]);
 
     function handleRecording() {
         setIsRecording(!isRecording);
     }
 
-    async function onGetUserMedia() {
-        const stream = await getUserMedia();
+    function onGetUserMedia(constraints) {
+        getUserMedia(constraints)
+            .then(stream => {
+                setUserMedia(stream);
+
+                return stream;
+            });
+    }
+
+    function onGetDisplayMedia(constraints) {
+        getDisplayMedia(constraints)
+            .then(stream => {
+                setDisplayMedia(stream);
+
+                return stream;
+            });
+    }
+
+    function handleCall(type) {
+        if(type === "video") {
+            onGetUserMedia({
+                video: {
+                    width: { ideal: 1920 },
+                    height: { ideal: 1080 },
+                },
+                audio: true,
+            });
+        } else if(type === "audio") {
+            onGetUserMedia({
+                video: false,
+                audio: true,
+            });
+        } else if(type === "display") {
+            onGetDisplayMedia({                
+                video: {
+                    width: { ideal: 1920 },
+                    height: { ideal: 1080 },
+                },
+            });
+        }
+    }
+
+    function handleTermination() {
+        if(userMedia && userMedia.active) {
+            userMedia.getTracks().forEach(track => track.stop());
+        }
         
-        userMediaRef.current.srcObject = stream;
-        setUserMedia(stream);
+        if(displayMedia && displayMedia.active) {
+            displayMedia.getTracks().forEach(track => track.stop());
+        }
+    }
+
+    function handleMute(muteArr) {
+        userMedia.getTracks().forEach(track => {
+            if(track.kind === "audio") {
+                if(muteArr.includes("mic")) {
+                    track.enabled = false;
+                } else {
+                    track.enabled = true;
+                }
+            }
+            if(track.kind === "video") {
+                if(muteArr.includes("camera")) {
+                    track.enabled = false;
+                } else {
+                    track.enabled = true;
+                }
+            }
+        });
     }
 
     return (
-        // <Dimmer.Dimmable as={ Segment } dimmed={ isSettingsVisible } onMouseEnter={ e => setIsSettingsVisible(true) } onMouseLeave={ e => setIsSettingsVisible(false) }>
-        <Dimmer.Dimmable as={ Segment } dimmed={ isSettingsVisible }>
-            <Button icon onClick={ onGetUserMedia }>
-                <Icon name="video camera" />
-            </Button>
-            <video ref={ userMediaRef } autoPlay={ true } />
+        <Dimmer.Dimmable as={ Segment } dimmed={ isSettingsVisible } onMouseEnter={ e => setIsSettingsVisible(true) } onMouseLeave={ e => setIsSettingsVisible(false) }>
+            <video ref={ videoRef } autoPlay={ true }/>
             
-            {/* <Menu inverted secondary text>
-                <Menu.Item>asdf</Menu.Item>
-                <Menu.Item>asdf</Menu.Item>
-                <Menu.Item>asdf</Menu.Item>
-            </Menu> */}
             <Rail attached internal position="right">
                 <Button.Group icon floated="right">
                     {
                         isRecording ? (
                             <Button icon labelPosition="left" size="huge" color={ isRecording ? "red" : null } onClick={ handleRecording }>
                                 <Icon name="dot circle" />
-                                { isRecording ? "00:00" : "Record"  }
+                                { isRecording ? "Recording..." : "Record"  }
                             </Button>
                         ) : null
                     }
-
-                    <Button icon onClick={ e => setIsSettingsVisible(!isSettingsVisible) }>
-                        <Icon name="settings" />
-                    </Button>
                 </Button.Group>
             </Rail>
 
 
             <Dimmer active={ isSettingsVisible } onClickOutside={ e => setIsSettingsVisible(false) }>
-                <Settings onRecord={ setIsRecording } />
+                <Settings
+                    isActive={ (userMedia && userMedia.active) || (displayMedia && displayMedia.active) }
+                    streams={{ user: userMedia, display: displayMedia }}
+                    onRecord={ setIsRecording }
+                    onVolume={ vol => setVolume(Math.min(Math.max(0, vol), 100)) }
+                    onMute={ handleMute }
+                    onTerminate={ handleTermination }
+                    onCall={ handleCall }
+                />
             </Dimmer>
         </Dimmer.Dimmable>
     );

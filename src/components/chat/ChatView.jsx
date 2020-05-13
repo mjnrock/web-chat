@@ -1,6 +1,7 @@
 import React from "react";
 import { Segment } from "semantic-ui-react";
 import Thread from "./Thread";
+import InputComment from "./InputComment";
 
 const posts = [
     {
@@ -51,6 +52,7 @@ function ChatView(props) {
     return (
         <Segment>
             <Thread posts={ posts } />
+            <InputComment />
         </Segment>
     )
 }

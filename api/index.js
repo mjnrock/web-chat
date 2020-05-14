@@ -7,20 +7,21 @@ const PORT = 3001;
 APP.use(express.urlencoded({ extended: true }));
 APP.use(express.json());
 APP.use(express.raw());
-APP.use(function(req, res, next) {
+APP.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    //? Whatever middleware work .next() is doing is ESSENTIAL to actually making this work
     next();
 });
 
-APP.get("/feed", (req, res, next) => {
+APP.get("/feed", (req, res) => {
     // "/feed/:feedId"
     // req.params.feedId
     fs.readFile("./data/messages.json", function (err, buf) {
         return res.send(buf.toString());
     });
 });
-APP.post("/message/", (req, res, next) => {
+APP.post("/message/", (req, res) => {
     const filepath = "./data/messages.json";
     const message = req.body;
 

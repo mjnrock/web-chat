@@ -7,15 +7,20 @@ const PORT = 3001;
 APP.use(express.urlencoded({ extended: true }));
 APP.use(express.json());
 APP.use(express.raw());
+APP.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
 
-APP.get("/feed", (req, res) => {
+APP.get("/feed", (req, res, next) => {
     // "/feed/:feedId"
     // req.params.feedId
     fs.readFile("./data/messages.json", function (err, buf) {
         return res.send(buf.toString());
     });
 });
-APP.post("/message/", (req, res) => {
+APP.post("/message/", (req, res, next) => {
     const filepath = "./data/messages.json";
     const message = req.body;
 

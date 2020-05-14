@@ -1,18 +1,1 @@
-[
-    {
-        "id": -1,
-        "message": "This is the first sample message."
-    },
-    {
-        "id": 1589466872935,
-        "message": "This is a test message at 1589466872935"
-    },
-    {
-        "id": 1589466894153,
-        "message": "This is a test message at 1589466894153"
-    },
-    {
-        "id": 1589466894987,
-        "message": "This is a test message at 1589466894987"
-    }
-]
+[{"id":-1,"message":"This is the first sample message."},{"id":1589466872935,"message":"This is a test message at 1589466872935"},{"id":1589466894153,"message":"This is a test message at 1589466894153"},{"id":1589466894987,"message":"This is a test message at 1589466894987"},{"id":1589467632932,"message":"This is a REACT test message at 1589467632932"},{"id":1589467701725,"message":"This is a REACT test message at 1589467701725"}]

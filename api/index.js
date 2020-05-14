@@ -17,18 +17,18 @@ APP.use((req, res, next) => {
 APP.get("/feed", (req, res) => {
     // "/feed/:feedId"
     // req.params.feedId
-    fs.readFile("./data/messages.json", function (err, buf) {
-        return res.send(buf.toString());
+    fs.readFile("./data/messages.json", function (err, buff) {
+        return res.send(buff.toString());
     });
 });
 APP.post("/message/", (req, res) => {
     const filepath = "./data/messages.json";
     const message = req.body;
 
-    console.log(message);
+    // console.log(message);
 
-    fs.readFile(filepath, "utf8", function readFileCallback(err, data) {
-        if (err) {
+    fs.readFile(filepath, "utf8", (err, data) => {
+        if(err) {
             console.log(err);
         } else {
             let obj = JSON.parse(data);

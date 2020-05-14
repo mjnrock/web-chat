@@ -15,10 +15,10 @@ function Post(props) {
         <Comment>
             <Comment.Avatar as="a" src="/assets/pusheen.png" />
             <Comment.Content>
-                <Comment.Author as="a">Matt</Comment.Author>
+                <Comment.Author as="a">{ props.post.author }</Comment.Author>
 
                 <Comment.Metadata>
-                    <span>Today at 5:42PM</span>
+                    <span>{ props.post.timestamp }</span>
                 </Comment.Metadata>
 
                 {
@@ -27,12 +27,12 @@ function Post(props) {
                         null    //TODO Render the image response
                     )
                     : (
-                        <Comment.Text>{ props.message }</Comment.Text>
+                        <Comment.Text>{ props.post.message }</Comment.Text>
                     )
                 }
 
                 <Comment.Actions>
-                    <ReactionBar postId={ props.postId } style={{ marginTop: 10 }} reactions={ reactionPlaceholders } />
+                    <ReactionBar postId={ props.post.id } style={{ marginTop: 10 }} reactions={ reactionPlaceholders } />
                 </Comment.Actions>
             </Comment.Content>
         </Comment>

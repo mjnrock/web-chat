@@ -6,6 +6,7 @@ import ChatView from "./../components/chat/ChatView";
 import { Button } from "semantic-ui-react";
 
 export default function Home() {
+    //! This was tested and WORKS, so long as CORS is enabled at API level
     function testPostCall() {
         fetch("http://localhost:3001/message", {
             method: "POST",
